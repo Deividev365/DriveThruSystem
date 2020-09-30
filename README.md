@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <h1 align="center">
-    <img alt="drive-thru-illustration" title="drive-thru" src="../assets/drive-thru-illustration.svg" width="500px" height="500px" />
+    <img alt="drive-thru-illustration" title="drive-thru" src="./assets/drive-thru-illustration.svg" width="500px" height="500px" />
 </h1>
 
 <h2 align="center">
