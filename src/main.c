@@ -4,15 +4,29 @@
 #include <locale.h>
 #include <string.h>
 
-#define disponiveis 9
+#define disponiveis 8
 int i;
 int codigoPedido;
 int qntdPedido;
 float setPedidoAcumulator = 0;
 
-int formaDePagamento;
 
 char tentarNovamente[1];
+
+
+int setCartaoValidacao = 0;
+
+
+typedef struct {
+
+    int formatOfPaying;
+    int cartaoValidacao[16];
+
+} paymentValidation;
+
+paymentValidation getUserData[2] = {
+    {0, 0}
+};
 
 // Hamburgeria LasBurgers // 
 typedef struct {
@@ -28,24 +42,18 @@ typedef struct {
  int CartaoId;
  char formatoPagamento[50];
  float setPedido;
-
+ 
 
 } menuPagamento;
 
-menuPagamento pegarValorTotal;
 
-menuPagamento meiosPagar[3] = {
-    {1, "Dinheiro"},
-    {2, "Cartao (Debito - Credito)"},
-    {3, "Cheque"},
+
+menuPagamento meiosPagar[4] = {
+    {1, "Dinheiro", 0, 0},
+    {2, "Cartao (Debito - Credito)", 0, 0},
+    {3, "Cheque", 0, 0},
 
 };
-
-
-
-
-
-
 
 
 menuDeLanches lasBurgers [disponiveis] = {
@@ -94,29 +102,32 @@ menuDeLanches lasBurgers [disponiveis] = {
         } 
 
         for(i = 0; i < disponiveis; i++) {
-
+            
             fread(&lasBurgers[i], 1, sizeof(menuDeLanches), pont_arq);
             
-            printf("%d- %s %f\n", lasBurgers[i].produtoId, lasBurgers[i].nomeDoLanche, lasBurgers[i].precoDoProduto);
+            printf("%d- %s R$%1.f\n", lasBurgers[i].produtoId, lasBurgers[i].nomeDoLanche, lasBurgers[i].precoDoProduto);
         }
     }
 
     void pedidoUsuario() {
      
-        pegarValorTotal.setPedido = 0;
+
         printf("Para fazer o pedido e SIMPLES\n");
         
-        printf("Digite o codigo referente ao que voce quer comprar:");
+        printf("Digite o codigo referente ao que voce quer comprar: ");
         scanf("%d", &codigoPedido);
+        codigoPedido--;
 
         printf("\nQuantos voce gostaria?:");
         scanf("%d", &qntdPedido);
 
 
 
-        pegarValorTotal.setPedido = lasBurgers[codigoPedido].precoDoProduto * qntdPedido;
+        meiosPagar->setPedido = lasBurgers[codigoPedido].precoDoProduto * qntdPedido;
          //setPedidoAcumulator = setPedidoAcumulator + setPedido;
-   
+        
+        printf("Valor total do seu %s e: %f\n", lasBurgers[codigoPedido].nomeDoLanche, meiosPagar->setPedido);
+
  
     }
 
@@ -133,50 +144,121 @@ menuDeLanches lasBurgers [disponiveis] = {
         
         for(i = 0; i < 3; i++) {
 
-        fwrite(&meiosPagar[i], 2, sizeof(menuDeLanches), pont_arq);
+            fwrite(&meiosPagar[i], 1, sizeof(menuPagamento), pont_arq);
+       }
+    }
 
-/*         writeFile("%d - %s - %f", meiosPagar[i].CartaoId, meiosPagar[i].formatoPagamento, setPedido, pont_arq);
- */        }
+    void readPaymentFormats() {
+
+        FILE *pont_arq; // CRIAMOS O PONTEIRO
+
+        pont_arq = fopen ("PAGAMENTOS.DAT.txt","r"); // - r = Escrever arquivo //
+
+        if(pont_arq == NULL) printf("Algum erro aconteceu");
+
+
+        printf("Arquivo lido!");
+
+        
+        for(i = 0; i < 3; i++) {
+
+            fwrite(&meiosPagar[i], 1, sizeof(menuPagamento), pont_arq);
+            printf("\n%d- %s %f\n", meiosPagar[i].CartaoId, meiosPagar[i].formatoPagamento, meiosPagar->setPedido);
+       }
     }
 
 
+    void cartoesData() {
+        FILE *pont_arq; // CRIAMOS O PONTEIRO
 
-    void formaPagamento() {
-        
-        printf("Valor total do seu %s e: %f\n", lasBurgers[codigoPedido].nomeDoLanche, setPedido);
+        pont_arq = fopen ("CARTOES.DAT.txt","w"); // - W = Escrever arquivo //
+
+        if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-/*         printf("\nBEM VINDO AO MENU PAGAMENTO :)\n");
- */     printf("\nEssas sao as formas de pagamento :)\n");
-
-        inicioPagamento:
-        for(i = 0; i < 3; i++) {
-            printf("\n%d - %s", meiosPagar[i].CartaoId, meiosPagar[i].formatoPagamento);
-        }
-
-        printf("\nSelecione a melhor forma de pagar: ");
-        scanf("%d", &formaDePagamento);
+        printf("Arquivo escrito!");
 
         
+            // cartaoID e cartaoValidacao
 
-        switch (formaDePagamento) {
+            // lasBurgers[codigoPedido].nomeDoLanche, meiosPagar->setPedido
+            fwrite(&getUserData, 1, sizeof(paymentValidation), pont_arq);
+       
+    }
 
-        case 1:
-            printf("Voce escolheu: Dinheiro");
-            writePaymentFormats();
+    void cartoesDataShow() {
+        FILE *pont_arq; // CRIAMOS O PONTEIRO
 
-        break;
+        pont_arq = fopen ("CARTOES.DAT.txt","r"); // - W = Escrever arquivo //
 
-        case 2:
-            //metodoCartao();
-        break;
+        if(pont_arq == NULL) printf("Algum erro aconteceu");
 
-        case 3:
-            //metodoCheque();
-        break;
 
-        default:
-            printf("Essa forma de paagmento é INVALIDA");
+        printf("Arquivo escrito!");
+
+        
+            // cartaoID e cartaoValidacao
+        fread(&getUserData, 1, sizeof(paymentValidation), pont_arq);
+
+            printf("\n%d - ", getUserData->formatOfPaying);
+
+            for(i = 0; i < 16; i++) {
+                printf("%d", getUserData[i].cartaoValidacao);
+            }
+
+    }
+
+
+    void cartaoMetodo() {
+        printf("\nVoce escolheu cartao!: ");
+            secaoPagar:
+            printf("\nDigite o numero do seu cartao (exatos 16 digitos): ");
+            //scanf("%d", &getUserData->cartaoValidacao);
+
+
+                for(i = 0; i < 16; i++ ) {
+                    getUserData->cartaoValidacao[i] = getch();
+                    putchar('*');
+                
+                }
+            
+            
+
+
+
+             /* if( getUserData->cartaoValidacao >= 16 || getUserData->cartaoValidacao <= 16) {
+                printf("Cartão Invalido");
+
+                goto secaoPagar;
+            } */
+
+
+            fflush(stdin);
+            cartoesData();
+            cartoesDataShow();
+
+
+
+            // registrar em um arquvios CARTOES.DAT quando passar a validação do cartão // 
+
+            //cartaoId  // cartaoUsuario ex(1111********4444); // mascarar entre 5 e 12 //
+            //
+
+            //printf("numero cartao: %d", setCartaoValidacao);
+    }
+
+    dinheiroMetodo() {
+        printf("\nObrigado por comprar! :) Ficamos felizes pela preferencia");
+
+            //filaDeEspera();
+    }
+
+    metodoCheque() {
+        printf("Aqui voce paga com cheque");
+    }
+
+    metodoDefault() {
+        printf("Essa forma de paagmento é INVALIDA");
             
             fflush(stdin);
 
@@ -187,17 +269,50 @@ menuDeLanches lasBurgers [disponiveis] = {
 
             // ARRUMAR ISSO // 
             if(tentarNovamente == "s" || tentarNovamente == "S") {
-                goto inicioPagamento;
+                formaPagamento();
 
             } else {
                 printf("Tchau!");
             }
+    }
 
+
+    void formaPagamento() {
+        
+/*         printf("\nBEM VINDO AO MENU PAGAMENTO :)\n");
+ */     printf("\nEssas sao as formas de pagamento :)\n");
+
+        inicioPagamento:
+        writePaymentFormats();
+        readPaymentFormats();
+        /* for(i = 0; i < 3; i++) {
+            printf("\n%d - %s", meiosPagar[i].CartaoId, meiosPagar[i].formatoPagamento);
+        } */
+
+        printf("\nSelecione a melhor forma de pagar: ");
+        scanf("%d", &getUserData->formatOfPaying);
+
+        
+        fflush(stdin);
+
+        switch (getUserData->formatOfPaying) {
+
+        case 1: // DINHEIRO
+            dinheiroMetodo();
+            break;
+
+        case 2: // CARTÃO DEBITO OU CREDITO // 
+            cartaoMetodo();
+            break;
+
+        case 3: // CHEQUE //
+            metodoCheque();
+            break;
+
+        default: // default // 
+            metodoDefault();
+            break;
         }
-
-
-
-
     }
 
 
@@ -211,104 +326,3 @@ menuDeLanches lasBurgers [disponiveis] = {
         pedidoUsuario();
         formaPagamento();
     }
-
-
-/* 
-  
-        printf("2-%s R$%f\n", lanchesDisponiveis.lanche2, lanchesDisponiveis.precoLanche2);
-        printf("3-%s R$%f\n", lanchesDisponiveis.lanche3, lanchesDisponiveis.precoLanche3); */
-    
-
-
-    /* float order(float price) {
-
-        int qntdPedidos;
-        float setCalc;
-
-        printf("Quantos Lanches você gostaria?: ");
-        scanf("%d", &qntdPedidos);
-        
-         setCalc = qntdPedidos * price;
-        
-        printf("Obrigado por comprar :). O total à pagar e: %f", setCalc);
-
-        return setCalc;
-    }
-                                                
-
-
-    void pedidoUsuario() {
-
-        int pedidoDoUsuario;
-
-        printf("o que gostaria de Comer?");
-        scanf("%d", &pedidoDoUsuario);
-
-
-    
-        switch (pedidoDoUsuario) {
-            case 1:
-               order();
-            break;
-            
-            case 2: 
-                order();
-
-
-            break;
-            
-            case 3:
-                order();
-                
-
-            break;
-        
-        default: 
-                printf("Opcao invalida");
-                // voltar menu //
-            break;
-        }
-    }
-    
-    
-    int main(void) {
-
-            printf("Bem Vindo ao Mickey & Donalds\n");
-            printf("Esse e o nosso MENU:\n");
-
-            writeFile();
-
-            menuLanches();
-
-            pedidoUsuario();
-
-        }
-
-
-     
-   /*  int quantidadePedidos;
-    
-    float calcTotal;
-
- */
-
-
-
-
-
-
-
-    
-    /* int pedidoDoUsuario;
-
-    menuLanches();
-    
-    */
-    
-    
-
-
-
-
-
- 
