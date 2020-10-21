@@ -20,12 +20,13 @@ int setCartaoValidacao = 0;
 typedef struct {
 
     int formatOfPaying;
-    int cartaoValidacao[16];
+    char cartaoValidacao[16];
+    //char senha[6];
 
 } paymentValidation;
 
 paymentValidation getUserData[2] = {
-    {0, 0}
+    { 0, 0 }
 };
 
 // Hamburgeria LasBurgers // 
@@ -201,41 +202,57 @@ menuDeLanches lasBurgers [disponiveis] = {
         fread(&getUserData, 1, sizeof(paymentValidation), pont_arq);
 
             printf("\n%d - ", getUserData->formatOfPaying);
+            
+            /* for(i = 0; i < 5; i++) {
+                getUserData->cartaoValidacao[i] = getch();
+                putchar('*');
+            }*/
+            
+            printf("%c", getUserData->cartaoValidacao[i]);
 
-            for(i = 0; i < 16; i++) {
-                printf("%d", getUserData[i].cartaoValidacao);
-            }
+            
 
     }
 
 
     void cartaoMetodo() {
+
         printf("\nVoce escolheu cartao!: ");
             secaoPagar:
             printf("\nDigite o numero do seu cartao (exatos 16 digitos): ");
-            //scanf("%d", &getUserData->cartaoValidacao);
+
+                for(i = 0; i < 16; i++) {
+                  getUserData->cartaoValidacao[i] = getch();
+                  printf("%c", getUserData->cartaoValidacao[i]);
 
 
-                for(i = 0; i < 16; i++ ) {
+                  if(i > 4) {
                     getUserData->cartaoValidacao[i] = getch();
                     putchar('*');
-                
+                  }
                 }
-            
-            
+
+                //printf("senha cartao: %s", result);
 
 
+                 /* for(i = 0; i < 16; i++ ) {
+                    getUserData->cartaoValidacao[i] = getch();
+                    fflush(stdin);
+                    printf("%c", getUserData->cartaoValidacao[i]);
+                    
 
-             /* if( getUserData->cartaoValidacao >= 16 || getUserData->cartaoValidacao <= 16) {
-                printf("Cartão Invalido");
+                    if(i > 5) {
+                        getUserData->cartaoValidacao[i] = getch();
+                        //fflush(stdin);
+                        putchar('*');
+                    }
+                } */
 
-                goto secaoPagar;
-            } */
+                //printf("%d", getUserData->cartaoValidacao[i]);
 
-
-            fflush(stdin);
-            cartoesData();
-            cartoesDataShow();
+                    fflush(stdin);
+                    cartoesData();
+                    cartoesDataShow();
 
 
 
