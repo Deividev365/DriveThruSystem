@@ -4,6 +4,8 @@
 #include <locale.h>
 #include <string.h>
 
+#define ANSI_COLOR_GREEN "\033[1;32m"
+
 #define disponiveis 8
 int i;
 int codigoPedido;
@@ -21,13 +23,14 @@ typedef struct {
 
     int formatOfPaying;
     char cartaoValidacao[16];
-    //char senha[6];
+
 
 } paymentValidation;
 
 paymentValidation getUserData[2] = {
     { 0, 0 }
 };
+
 
 // Hamburgeria LasBurgers // 
 typedef struct {
@@ -203,52 +206,41 @@ menuDeLanches lasBurgers [disponiveis] = {
 
             printf("\n%d - ", getUserData->formatOfPaying);
             
-            /* for(i = 0; i < 5; i++) {
-                getUserData->cartaoValidacao[i] = getch();
-                putchar('*');
-            }*/
+            for(i = 0; i < 4; i++) {
+                    printf("%c", getUserData->cartaoValidacao[i]);
+            }
             
-            printf("%c", getUserData->cartaoValidacao[i]);
+            for(i = 5; i < 16; i++) {
 
-            
-
+                if(i > 4 && i < 12) {
+                    
+                    printf("*");
+                
+                } else {
+                    
+                    printf("%c", getUserData->cartaoValidacao[i]);
+                    
+                }
+            }
     }
 
 
     void cartaoMetodo() {
-
+        // %2.f %.2f
         printf("\nVoce escolheu cartao!: ");
             secaoPagar:
             printf("\nDigite o numero do seu cartao (exatos 16 digitos): ");
-
-                for(i = 0; i < 16; i++) {
-                  getUserData->cartaoValidacao[i] = getch();
-                  printf("%c", getUserData->cartaoValidacao[i]);
-
-
-                  if(i > 4) {
-                    getUserData->cartaoValidacao[i] = getch();
-                    putchar('*');
-                  }
-                }
-
-                //printf("senha cartao: %s", result);
-
-
-                 /* for(i = 0; i < 16; i++ ) {
-                    getUserData->cartaoValidacao[i] = getch();
-                    fflush(stdin);
-                    printf("%c", getUserData->cartaoValidacao[i]);
-                    
-
-                    if(i > 5) {
-                        getUserData->cartaoValidacao[i] = getch();
-                        //fflush(stdin);
-                        putchar('*');
-                    }
-                } */
-
-                //printf("%d", getUserData->cartaoValidacao[i]);
+            
+            for(i = 0; i < 16; i++) {
+				getUserData->cartaoValidacao[i] = getch();
+            	fflush(stdin);
+            	printf("%c", getUserData->cartaoValidacao[i]);
+            }
+                // validacao se for > 16 || < 16 digitos.
+            /* if(getUserData->cartaoValidacao[i] != 16) {
+                printf("Erro!");
+                return (0);
+            } */
 
                     fflush(stdin);
                     cartoesData();
@@ -265,9 +257,30 @@ menuDeLanches lasBurgers [disponiveis] = {
     }
 
     dinheiroMetodo() {
-        printf("\nObrigado por comprar! :) Ficamos felizes pela preferencia");
 
-            //filaDeEspera();
+        float userMoneypayment;
+        float change;
+
+        printf(ANSI_COLOR_GREEN "dinheiro!");
+
+        printf("Total a pagar: %2f", meiosPagar->setPedido);
+
+        printf("Pague aqui: (Digite o preco do lanche em R$): ");
+        scanf("%f", &userMoneypayment);
+
+        if(userMoneypayment < meiosPagar->setPedido) {
+
+            printf("erro no pagamento! Digite o valor corretamente! ");
+
+        } else if( userMoneypayment > meiosPagar->setPedido) {
+
+            change = userMoneypayment - meiosPagar->setPedido;
+            printf("O seu troco e: %f, Obrigado por comprar!", change);
+
+        }
+        
+        //
+        //filaDeEspera();
     }
 
     metodoCheque() {
