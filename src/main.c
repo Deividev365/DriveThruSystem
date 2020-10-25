@@ -18,10 +18,6 @@ void delay(int number_of_seconds)  {
 } 
 
 
-#define ANSI_COLOR_GREEN "\033[1;32m" // DINHEIRO
-#define ANSI_COLOR_PURPLE "\033[1;32m" // DINHEIRO
-#define ANSI_COLOR_BLUE "\033[1;34m" // CHEQUE
-
 #define disponiveis 8
 int i;
 int codigoPedido;
@@ -274,11 +270,13 @@ queue filaMaiorIdade;
                 printf("Erro!");
                 return (0);
             } */
+            
 
                     fflush(stdin);
                     cartoesData();
                     cartoesDataShow();
-
+            
+            filaDeEspera();
 
 
                     
@@ -321,12 +319,18 @@ queue filaMaiorIdade;
 
     metodoCheque() {
 
+        char userName[50];
 
-       /*  printf("Aqui voce paga com cheque");
-        printf  ("Cheque emetido por..:");
-        scanf ("%c", &nome);
-	    printf("Pague por este cheque na quantia de: %.2f", meiosPagar->setPedido);    
-     */
+        printf("\nAqui voce paga com cheque");
+	    printf("\nPague por este cheque na quantia de: %.2f", meiosPagar->setPedido);    
+     
+        printf("\nDigite o seu nome completo: ");
+        gets(userName);
+        fflush(stdin);
+
+        printf("\n\n\nPago com sucesso!");
+
+        filaDeEspera();
     
     }
 
@@ -395,11 +399,11 @@ queue filaMaiorIdade;
 
         int idNormal = rand() % 20;
 
-        printf("\nBem vindo a FILA DE ESPERA do LAburge :)");
+        printf("\n-----Bem vindo a FILA DE ESPERA do LAburge");
 
         printf("\nPara entrar na FILA DE ESPERA e preciso preencher um cadastro: ");
 
-        printf("\nDigite o seu nome: ");
+        printf("\nDigite o seu primeiro nome: ");
         scanf("%s", &menuFila.userName);
 
         fflush(stdin);
@@ -424,15 +428,14 @@ queue filaMaiorIdade;
 
         } else {
                 
-            printf("Bem vindo a fila de espera, %s a sua senha e %d, AGUARDE O NUMERO %d SER CHAMADO", menuFila.userName, idNormal, idPreferencial);   
+            printf("\nBem vindo a fila de espera, %s a sua senha e %d, AGUARDE O NUMERO %d SER CHAMADO", menuFila.userName, idNormal, idPreferencial);   
             
-            printf("\n Aguarde...");
             for(i = 0; i < idNormal; i++) {
                 delay(1);
                 printf("\n Aguarde...", i + 1);
             }
 
-            printf("\nObrigado por comprar! Recebemos o seu pedido, %s", menuFila.userName);
+            printf("\n\nObrigado por comprar! Recebemos o seu pedido, %s", menuFila.userName);
             printf("\nLogo o seu %s chegará na sua casa!", lasBurgers[codigoPedido].nomeDoLanche);
         }
 
@@ -447,25 +450,41 @@ queue filaMaiorIdade;
     void entregaPedido() {
 
         
- 
+
+        // getUserData.FormatOfPaying = 1, 2 ou 3 // 
+        // meiosPagar.FormatoPagamento = Dinheiro, Cartao ou Cheque // 
+
+
         switch (getUserData->formatOfPaying) {
+
         case 1:
+            //system("COLOR 2");
+            //system ("cls");
+            printf("\nAH, VOCE PAGOU COM ");
             system("COLOR 2");
-            printf("\n\nO pedido ja foi pago com %s ", meiosPagar[getUserData->formatOfPaying].formatoPagamento); // DINHEIRO // 
+            system("cls");
+            printf("DINHEIRO :)"); // DINHEIRO // 
             break;
 
         case 2:
+            //system("COLOR 5");
+            //system ("cls");
+            printf("\nAH, VOCE PAGOU COM ");
             system("COLOR 5");
-            printf("\n\nO pedido ja foi pago com %s", meiosPagar[getUserData->formatOfPaying].formatoPagamento); // CARTAO OU DEBITO //
+            system("cls");
+            printf("CARTAO :)");; // CARTAO OU DEBITO //
             break;
 
         
         case 3:
+
+            printf("\nAH, VOCE PAGOU COM ");
             system("COLOR 1");
-            printf("\n\nO pedido ja foi pago com %s", meiosPagar[getUserData->formatOfPaying].formatoPagamento); // CHEQUE // 
+            printf("CHEQUE :)"); // CHEQUE // 
             break;
         
         default:
+            printf("Indisponível");
             break;
         }
         // Pedido foi pago com (cartao) 
@@ -477,7 +496,7 @@ queue filaMaiorIdade;
 
     int main(void) {
 
-        printf("===Bem Vindo ao Mickey & Donalds===\n");
+        printf("\nBem Vindo ao LasBurgers\n");
         printf("Esse e o nosso MENU\n");
 
         writeFile();
