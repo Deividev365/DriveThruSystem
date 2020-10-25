@@ -4,105 +4,14 @@
 #include <locale.h>
 #include <string.h>
 #include <time.h>
+#include "delay.c"
 
-
-void delay(int number_of_seconds)  { 
-	// Converting time into milli_seconds 
-	int milli_seconds = 1000 * number_of_seconds; 
-
-	// Storing start time 
-	clock_t start_time = clock(); 
-
-	// looping till required time is not achieved 
-	while (clock() < start_time + milli_seconds); 
-} 
-
-
-#define disponiveis 8
-int i;
-int codigoPedido;
-int qntdPedido;
-float setPedidoAcumulator = 0;
-
-
-char tentarNovamente[1];
-
-
-int setCartaoValidacao = 0;
-
-
-typedef struct {
-
-    int formatOfPaying;
-    char cartaoValidacao[16];
-
-
-} paymentValidation;
-
-paymentValidation getUserData[2] = {
-    { 0, 0 }
-};
-
-
-// Hamburgeria LasBurgers // 
-typedef struct {
-// Irá conter o menu   
-    int produtoId;
-    char nomeDoLanche[30];
-    float precoDoProduto;
-    
-} menuDeLanches;
-
-typedef struct {
-
- int CartaoId;
- char formatoPagamento[50];
- float setPedido;
- 
-
-} menuPagamento;
-
-
-typedef struct {
-
-    char userName[50];
-    int userAge;
-
-} queue;
-
-
-
-
-
-
-
-menuPagamento meiosPagar[4] = {
-    {1, "Dinheiro", 0, 0},
-    {2, "Cartao (Debito - Credito)", 0, 0},
-    {3, "Cheque", 0, 0},
-
-};
-
-
-menuDeLanches lasBurgers [disponiveis] = {
-    {1, "X-BURGER", 7.50 }, // 0
-    {2, "X-Salada", 9.50 }, // 1 ..
-    {3, "Coca-cola", 5.50 },
-    {4, "BigTasty", 14.50 },
-    {5, "LaDelicia", 20.50 },
-    {6, "X-Suculento", 17.50 },
-    {7, "BigMac", 37.50 },
-    {8, "lasanha", 57.50 },
-};
-
-queue menuFila;
-queue filaPadrao;
-queue filaMaiorIdade;
+#include "tipagens.c"
 
 
 
 // escrever arquivos do meu menu de lanches
-    void writeFile() {
+    void writeFile(void) {
 
         FILE *pont_arq; // CRIAMOS O PONTEIRO
 
@@ -111,7 +20,7 @@ queue filaMaiorIdade;
         if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-        printf("Arquivo escrito!");
+        printf("\nProdutos presentes na nossa base de dados :)");
 
         
         for(i = 0; i < disponiveis; i++) {
@@ -122,7 +31,7 @@ queue filaMaiorIdade;
 
     }
 
-    void exibirMenu() {
+    void exibirMenu(void) {
 
         FILE *pont_arq; // CRIAMO O PONTEIRO
 
@@ -142,29 +51,27 @@ queue filaMaiorIdade;
         }
     }
 
-    void pedidoUsuario() {
+    void pedidoUsuario(void) {
      
-
-        printf("Para fazer o pedido e SIMPLES\n");
+        printf("\nPara fazer o pedido e SIMPLES\n");
         
-        printf("Digite o codigo referente ao que voce quer comprar: ");
+        printf("\nDigite o codigo referente ao que voce quer comprar: ");
         scanf("%d", &codigoPedido);
         codigoPedido--;
 
-        printf("\nQuantos voce gostaria?:");
+        printf("\nQuantos %s voce gostaria?: ", lasBurgers[codigoPedido].nomeDoLanche);
         scanf("%d", &qntdPedido);
 
 
-
         meiosPagar->setPedido = lasBurgers[codigoPedido].precoDoProduto * qntdPedido;
-         //setPedidoAcumulator = setPedidoAcumulator + setPedido;
-        
-        printf("Valor total do seu %s e: %.2f\n", lasBurgers[codigoPedido].nomeDoLanche, meiosPagar->setPedido);
 
+        printf("\n\n********************************");
+        printf("\nValor total do seu %s e: %.2f\n", lasBurgers[codigoPedido].nomeDoLanche, meiosPagar->setPedido);
+        printf("\n**********************************");
  
     }
 
-    void writePaymentFormats() {
+    void writePaymentFormats(void) {
          FILE *pont_arq; // CRIAMOS O PONTEIRO
 
         pont_arq = fopen ("PAGAMENTOS.DAT.txt","w"); // - W = Escrever arquivo //
@@ -172,7 +79,7 @@ queue filaMaiorIdade;
         if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-        printf("Arquivo escrito!");
+        //printf("\nDados foram escritos!");
 
         
         for(i = 0; i < 3; i++) {
@@ -181,7 +88,7 @@ queue filaMaiorIdade;
        }
     }
 
-    void readPaymentFormats() {
+    void readPaymentFormats(void) {
 
         FILE *pont_arq; // CRIAMOS O PONTEIRO
 
@@ -190,7 +97,7 @@ queue filaMaiorIdade;
         if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-        printf("Arquivo lido!");
+        //printf("Dados Registrados");
 
         
         for(i = 0; i < 3; i++) {
@@ -201,7 +108,7 @@ queue filaMaiorIdade;
     }
 
 
-    void cartoesData() {
+    void cartoesData(void) {
         FILE *pont_arq; // CRIAMOS O PONTEIRO
 
         pont_arq = fopen ("CARTOES.DAT.txt","w"); // - W = Escrever arquivo //
@@ -209,7 +116,7 @@ queue filaMaiorIdade;
         if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-        printf("Arquivo escrito!");
+        //printf("Dados foram escritos!");
 
         
             // cartaoID e cartaoValidacao
@@ -219,7 +126,7 @@ queue filaMaiorIdade;
        
     }
 
-    void cartoesDataShow() {
+    void cartoesDataShow(void) {
         FILE *pont_arq; // CRIAMOS O PONTEIRO
 
         pont_arq = fopen ("CARTOES.DAT.txt","r"); // - W = Escrever arquivo //
@@ -227,7 +134,7 @@ queue filaMaiorIdade;
         if(pont_arq == NULL) printf("Algum erro aconteceu");
 
 
-        printf("Arquivo escrito!");
+        //printf("Dados foram Registrados");
 
         
             // cartaoID e cartaoValidacao
@@ -254,9 +161,11 @@ queue filaMaiorIdade;
     }
 
 
-    void cartaoMetodo() {
-        // %2.f %.2f
-        printf("\nVoce escolheu cartao!: ");
+    void cartaoMetodo(void) {
+        
+        filaDeEspera();
+
+        printf("\nPague com o seu cartao(debito ou credito)");
             secaoPagar:
             printf("\nDigite o numero do seu cartao (exatos 16 digitos): ");
             
@@ -270,33 +179,23 @@ queue filaMaiorIdade;
                 printf("Erro!");
                 return (0);
             } */
-            
 
-                    fflush(stdin);
-                    cartoesData();
-                    cartoesDataShow();
-            
-            filaDeEspera();
+        fflush(stdin);
 
+        cartoesData();
 
-                    
+        cartoesDataShow();
 
+        entregaPedido();
 
-
-            // registrar em um arquvios CARTOES.DAT quando passar a validação do cartão // 
-
-            //cartaoId  // cartaoUsuario ex(1111********4444); // mascarar entre 5 e 12 //
-            //
-
-            //printf("numero cartao: %d", setCartaoValidacao);
     }
 
-    dinheiroMetodo() {
+    void dinheiroMetodo(void) {
 
-        float userMoneypayment;
-        float change;
+        filaDeEspera();
 
-        //printf(ANSI_COLOR_GREEN "\n dinheiro!");
+        float userMoneypayment, change;
+
 
         printf("\nTotal a pagar: %.2f", meiosPagar->setPedido);
 
@@ -314,27 +213,32 @@ queue filaMaiorIdade;
 
         }
         
-        filaDeEspera();
+        entregaPedido();
     }
 
-    metodoCheque() {
+
+    void metodoCheque(void) {
+
+        filaDeEspera();
+        fflush(stdin);
 
         char userName[50];
 
         printf("\nAqui voce paga com cheque");
 	    printf("\nPague por este cheque na quantia de: %.2f", meiosPagar->setPedido);    
-     
-        printf("\nDigite o seu nome completo: ");
-        gets(userName);
+        
         fflush(stdin);
 
-        printf("\n\n\nPago com sucesso!");
+        printf("\nDigite o seu nome completo: ");
+        gets(userName);
 
-        filaDeEspera();
-    
+        fflush(stdin);
+
+        entregaPedido();
+
     }
 
-    metodoDefault() {
+    void metodoDefault(void) {
         printf("Essa forma de paagmento é INVALIDA");
             
             fflush(stdin);
@@ -354,18 +258,15 @@ queue filaMaiorIdade;
     }
 
 
-    void formaPagamento() {
+    void formaPagamento(void) {
         
-/*         printf("\nBEM VINDO AO MENU PAGAMENTO :)\n");
- */     printf("\nEssas sao as formas de pagamento :)\n");
+
+        printf("\nEssas sao as formas de pagamento :)\n");
 
         inicioPagamento:
         writePaymentFormats();
         readPaymentFormats();
-        /* for(i = 0; i < 3; i++) {
-            printf("\n%d - %s", meiosPagar[i].CartaoId, meiosPagar[i].formatoPagamento);
-        } */
-
+    
         printf("\nSelecione a melhor forma de pagar: ");
         scanf("%d", &getUserData->formatOfPaying);
 
@@ -393,29 +294,30 @@ queue filaMaiorIdade;
     }
 
 
-    void filaDeEspera() {
+    void filaDeEspera(void) {
 
         int idPreferencial = rand() % 10;
 
         int idNormal = rand() % 20;
 
-        printf("\n-----Bem vindo a FILA DE ESPERA do LAburge");
+        printf("\n\n********************************************");
+        printf("\nBem vindo a FILA DE ESPERA dos LasBurgers");
+        printf("\n**********************************************");
 
-        printf("\nPara entrar na FILA DE ESPERA e preciso preencher um cadastro: ");
+        printf("\n\nPara entrar na FILA DE ESPERA e preciso fazer um cadastro simples: ");
 
         printf("\nDigite o seu primeiro nome: ");
         scanf("%s", &menuFila.userName);
 
         fflush(stdin);
 
-        printf("Digite a sua idade: ");
+        printf("\nDigite a sua idade: ");
         scanf("%d", &menuFila.userAge);
 
 
 
-        if(menuFila.userAge > 60) {
+        if( menuFila.userAge > 60 ) {
             //filaMaiorIdade
-
             printf("Bem vindo a fila preferencial, %s, a sua senha e: %d", menuFila.userName, idPreferencial);
 
             for(i = 0; i < idPreferencial; i++) {
@@ -423,7 +325,7 @@ queue filaMaiorIdade;
                 printf("\nAguarde...", i + 1);
             }
 
-            printf("\nObrigado por comprar! Recebemos o seu pedido, %s", menuFila.userName);
+            printf("\nRecebemos o seu pedido, %s", menuFila.userName);
             printf("\nLogo o seu %s chegará na sua casa!", lasBurgers[codigoPedido].nomeDoLanche);
 
         } else {
@@ -435,69 +337,55 @@ queue filaMaiorIdade;
                 printf("\n Aguarde...", i + 1);
             }
 
-            printf("\n\nObrigado por comprar! Recebemos o seu pedido, %s", menuFila.userName);
-            printf("\nLogo o seu %s chegará na sua casa!", lasBurgers[codigoPedido].nomeDoLanche);
+            printf("\n\nRecebemos o seu pedido, %s\n", menuFila.userName);
+            printf("\nLogo o seu %s chegará na sua casa!\n", lasBurgers[codigoPedido].nomeDoLanche);
         }
-
-        
-        entregaPedido();
-
 
     }
 
 
 
-    void entregaPedido() {
-
-        
-
-        // getUserData.FormatOfPaying = 1, 2 ou 3 // 
-        // meiosPagar.FormatoPagamento = Dinheiro, Cartao ou Cheque // 
+    void entregaPedido(void) {
 
 
         switch (getUserData->formatOfPaying) {
 
         case 1:
-            //system("COLOR 2");
-            //system ("cls");
-            printf("\nAH, VOCE PAGOU COM ");
+        
             system("COLOR 2");
-            system("cls");
-            printf("DINHEIRO :)"); // DINHEIRO // 
+            printf("\nVOCE PAGOU COM"); // DINHEIRO // 
+            printf(" dinheiro!");
             break;
 
         case 2:
-            //system("COLOR 5");
-            //system ("cls");
-            printf("\nAH, VOCE PAGOU COM ");
-            system("COLOR 5");
-            system("cls");
-            printf("CARTAO :)");; // CARTAO OU DEBITO //
+
+            system("COLOR 05");
+            printf("\nVOCE PAGOU COM ");
+            printf("CARTAO :)"); // CARTAO OU DEBITO //
             break;
 
         
         case 3:
 
-            printf("\nAH, VOCE PAGOU COM ");
-            system("COLOR 1");
-            printf("CHEQUE :)"); // CHEQUE // 
+            system("COLOR 01");
+            printf("\nVOCE PAGOU COM");
+            printf(" CHEQUE"); // CHEQUE // 
             break;
         
         default:
+
             printf("Indisponível");
             break;
+
         }
-        // Pedido foi pago com (cartao) 
     }
 
-
-    
-
-
     int main(void) {
+        printf("*********************************");
+        printf("\nBem Vindo ao LasBurgers :p\n");
+        printf("\n*********************************");
 
-        printf("\nBem Vindo ao LasBurgers\n");
-        printf("Esse e o nosso MENU\n");
+        printf("\nEsse e o nosso MENU.\n\n");
 
         writeFile();
         exibirMenu();
