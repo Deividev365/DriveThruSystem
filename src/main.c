@@ -198,13 +198,15 @@
 
 
         printf("\nTotal a pagar: %.2f", meiosPagar->setPedido);
-
+        
+        pagueAqui:
         printf("\n\nPague aqui: (Digite o preco do lanche em R$): ");
         scanf("%f", &userMoneypayment);
 
         if(userMoneypayment < meiosPagar->setPedido) {
 
             printf("\nerro no pagamento! Digite o valor corretamente! ");
+            goto pagueAqui;
 
         } else if( userMoneypayment > meiosPagar->setPedido) {
 

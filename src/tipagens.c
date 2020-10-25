@@ -1,4 +1,4 @@
-#define disponiveis 8
+#define disponiveis 13
 
 int i, codigoPedido, qntdPedido;
 char tentarNovamente[1];
@@ -13,14 +13,19 @@ typedef struct {
 } menuDeLanches;
 
 menuDeLanches lasBurgers [disponiveis] = {
-    {1, "X-BURGER", 7.50 }, // 0
+    {1, "COMBO: X-BURGER + BATATA", 15.50 }, // 0
     {2, "X-Salada", 9.50 }, // 1 ..
-    {3, "Coca-cola", 5.50 },
+    {3, "Picanha das galaxias + Coca-cola", 20.50 },
     {4, "BigTasty", 14.50 },
     {5, "LaDelicia", 20.50 },
     {6, "X-Suculento", 17.50 },
-    {7, "BigMac", 37.50 },
-    {8, "lasanha", 57.50 },
+    {7, "BigMac", 27.50 },
+    {8, "lasanha", 27.50 },
+    {9, "vegTasty + coca-cola", 17.50 },
+    {10, "x-tudo", 37.50 },
+    {11, "Big King", 27.50 },
+    {12, "goCrazyBurger + batata + mcflurry", 77.50 },
+    {13, "oldschool", 47.50 },
 };
 
 

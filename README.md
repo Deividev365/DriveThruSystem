@@ -3,17 +3,17 @@
     <img alt="drive-thru-illustration" title="drive-thru" src="./assets/drive-thru-illustration.svg" width="400px" height="400px" />
 </h1>
 <h2 align="center">
-  Mickey & Donald | Drive-Thru
+  LasBurgers | Hamburgeria 
 </h2>
 
 
 ## 🚀 Objetivo do Projeto
 
-Projeto final da matéria de Lógica da Programação.
+Projeto final da matéria de Lógica da Programação, com objetivo de criar um sistema de driveThru, com pedidos, pagamento, fila e modulo entrega.
 
-## 🔖 Deadline
+## 🔖 DeadLine
 
-- [x] Iniciar projeto - 30/09
+- [X] Fim do projeto - 25/10/2020
 
 
 <p align="center">Participantes do Projeto</p>
